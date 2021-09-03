@@ -1,0 +1,49 @@
+.weather {
+  margin-top: 40px;
+
+  &--container {
+    padding: 10px;
+    display: flex;
+    // flex-direction: column;
+    justify-content: space-between;
+
+    &__about {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+    }
+
+    &__name {
+      text-align: center;
+      font-size: 35px;
+    }
+  }
+}
+
+.icon {
+  height: auto;
+  width: 250px;
+}
+
+.temp {
+  position: relative;
+// display: flex;
+  font-size: 60px;
+  &__degre {
+  
+
+    &::after {
+      position: absolute;
+      top: 2px;
+      content: "o";
+      font-size: 25px;
+      
+    }
+  }
+
+  &__celsius {
+    margin-left: 10px;
+  }
+}

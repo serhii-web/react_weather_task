@@ -1,0 +1,47 @@
+.App {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 50px;
+  background-image: url(https://cdn.pixabay.com/photo/2015/03/26/09/47/sky-690293_960_720.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+}
+
+.header {
+  margin-top: 50px;
+}
+
+.error {
+  height: 40px;
+  width: 100%;
+  text-align: center;
+
+  &--mesage {
+    font-size: 40px;
+    font-weight: 600;
+    color: red;
+    text-shadow: 4px 4px rgba(12, 12, 12, 0.616);
+  }
+}
+
+.location {
+  background-color: rgba(185, 212, 166, 0.616);
+  width: 800px;
+  height: 400px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.801);
+  border-radius: 40px;
+}
+
+.cold-weather {
+  background-color:	#00ffff;
+}
+
+.cool-weather {
+  background-color: #fff700 ;
+}
+
+.hot-weather {
+  background-color:  #ff8c00;
+}
