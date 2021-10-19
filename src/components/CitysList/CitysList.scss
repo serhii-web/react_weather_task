@@ -1,0 +1,22 @@
+.citys {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  &--item {
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 5px;
+    padding-left: 20px;
+    background-color: rgb(179, 170, 170);
+
+    :hover {
+      cursor: pointer;
+    }
+  }
+
+  &--name {
+    font-size: 25px;
+    color: #fff;
+  }
+}

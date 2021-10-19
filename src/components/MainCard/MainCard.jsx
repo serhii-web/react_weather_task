@@ -1,5 +1,4 @@
 import React from 'react';
-import { getWeather } from '../../api/getWether';
 import './MainCard.scss';
 
 export const MainCard = React.memo(({ weather }) => {
@@ -17,7 +16,6 @@ export const MainCard = React.memo(({ weather }) => {
             </div>
         </div>
       </section>
-
     </div>
   )
 })

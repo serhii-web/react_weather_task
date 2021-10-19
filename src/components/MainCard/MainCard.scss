@@ -4,7 +4,6 @@
   &--container {
     padding: 10px;
     display: flex;
-    // flex-direction: column;
     justify-content: space-between;
 
     &__about {
@@ -29,11 +28,9 @@
 
 .temp {
   position: relative;
-// display: flex;
   font-size: 60px;
   &__degre {
   
-
     &::after {
       position: absolute;
       top: 2px;

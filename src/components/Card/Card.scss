@@ -6,19 +6,5 @@
   font-size: 30px;
   border-radius: 20px;
   box-shadow: 5px 2px 6px black;
-
-  &--time {
-    display: block;
-    position: relative;
-
-    &::after {
-      content: "00";
-      position: absolute;
-      margin-left: 2px;
-      top: 8px;
-      font-size: 15px;
-      text-decoration: underline;
-    }
-  }
 }
 

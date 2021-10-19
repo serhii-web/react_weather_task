@@ -1,27 +1,55 @@
-import React, { useState, useEffect } from 'react';
-import { getWeather } from '../../api/getWether';
+import React, { useState, useEffect, useCallback } from 'react';
+import { CitysList } from '../CitysList';
+import { getCitys } from '../../api/getData';
 import './Form.scss';
 
-export const Form = ({ onAdd, onError }) => {
-  const [city, setCity] = useState('london');
-  const [inputValue, setInputValue] = useState('')
+const debounce = (f) => {
+  let timer;
+
+  return (value) => {
+    clearTimeout(timer);
+    timer = setTimeout(f, 1000, value);
+  };
+};
+
+export const Form = ({ setGeo, onError }) => {
+  const [inputValue, setInputValue] = useState('');
+  const [cityName, setCityName] = useState('');
+  const [citys, setCitys] = useState([]);
+
+  const apliedQuery = useCallback(debounce(setCityName), []);
+
+  const handleChange = (value) => {
+    if (!inputValue.trim() && citys.length) {
+      setCitys([]);
+    }
+
+    setInputValue(value);
+    apliedQuery(value);
+  }
 
   useEffect(() => {
-    getWeather(`weather?q=${city}&appid=348d3054b4f5732453d1ab4bd9d80eca`)
-      .then(res => {
-        onError(null)
-        onAdd(res)
-      })
-      .catch(onError)
-  }, [city]);
+    if (!cityName) return;
+
+    getCitys(cityName)
+    .then(res => setCitys(res.features));
+    
+  }, [cityName]);
+
+  const addCoords = (coord) => {
+    const geo = coord.geometry.coordinates.reverse();
+    setGeo(geo);
+    setInputValue('');
+    setCityName('');
+    setCitys([]);
+  };
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if(inputValue.trim().length) {
-      setCity(inputValue)
-      setInputValue('')
-    }
-  }
+    e.preventDefault();
+    if(citys.length) {
+      addCoords(citys[0]);
+    };
+  };
 
   return (
     <div className="form">
@@ -34,19 +62,19 @@ export const Form = ({ onAdd, onError }) => {
             aria-label="Find city"
             aria-describedby="button-addon2"
             value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
           />
           <button
             className="btn btn-outline-secondary"
             type="submit"
             id="button-addon2"
+            disabled={!inputValue}
           >
             Button
           </button>
         </div>
+        {(!!citys.length && !!inputValue) && <CitysList citys={citys} onAdd={addCoords}/>}
       </form>
     </div>
-
   )
-  
-}
+};

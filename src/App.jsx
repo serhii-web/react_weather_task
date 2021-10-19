@@ -2,32 +2,29 @@ import React, { useEffect, useState } from 'react';
 import './App.scss';
 import classnames from 'classnames';
 import { MainCard } from './components/MainCard'
-import { getWeather } from './api/getWether'
+import { getWeather } from './api/getData'
 import { Form } from './components/Form';
 import { Cards } from './components/Cards';
 
-
-//С=К - 273.15 переведення в цельсії з кельвінів 
-
 function App() {
-  const [geo, setGeo] = useState(null);
+  const [geo, setGeo] = useState([]);
   const [weather, setWeather] = useState(null);
   const [error, setError] = useState(null);
-  const [list, setList] = useState([])
+  const [list, setList] = useState([]);
 
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition((coords) => {
-      setGeo(coords)
-    })
+    navigator.geolocation.getCurrentPosition(({ coords }) => {
+      setGeo([coords.latitude, coords.longitude]);
+    });
 
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (geo) {
-      getWeather(`weather?lat=${geo.coords.latitude}&lon=${geo.coords.longitude}`)
+    if (geo.length) {
+      getWeather(`weather?lat=${geo[0]}&lon=${geo[1]}`)
         .then(res => {
-          setWeather(res)
-          setError(null)
+          setWeather(res);
+          setError(null);
         })
         .catch(setError);
     }
@@ -35,38 +32,39 @@ function App() {
   }, [geo]);
 
   useEffect(() => {
-    if (weather) {
-      getWeather(`forecast?q=${weather.name}`)
-      .then(res => res.list)
+    if (geo.length) {
+      getWeather(`onecall?lat=${geo[0]}&lon=${geo[1]}&exclude=current,hourly,minutely`)
+      .then(res => res.daily)
       .then(setList)
     }
-  }, [weather]);
+  }, [geo]);
 
   return (
-    <div className="App">
-      <div className="header">
-        {}
-        <Form onAdd={setWeather} onError={setError}/>
-      </div>
-      <div className="error">
-        {error && <span className="error--mesage">{error.statusText}</span>}
-      </div>
-      <div className={classnames("location", {
-        "cold-weather": weather && Math.round(weather.main.temp - 273.15) <= -10,
-        "cool-weather": weather && Math.round(weather.main.temp - 273.15) === 10,
-        "hot-weather": weather && Math.round(weather.main.temp - 273.15) >= 30
-      })}>
-        {weather && <div>
-          <section>
-            <MainCard weather={weather} />
-          </section>
-          <section>
-            <Cards list={list.slice(0, 5)}/>
-          </section>
+      <div className="App">
+        <div className="header">
+          <Form onError={setError} setGeo={setGeo}/>
+        </div>
+        <div className="error">
+          {error && <span className="error--mesage">{error.statusText}</span>}
+        </div>
+        { weather && <div className={
+          classnames(
+          "location", {
+          "cold-weather": weather && Math.round(weather.main.temp - 273.15) <= -10,
+          "cool-weather": weather && Math.round(weather.main.temp - 273.15) === 10,
+          "hot-weather": weather && Math.round(weather.main.temp - 273.15) >= 30
+        })}>
+          <div>
+            <section>
+              <MainCard weather={weather} />
+            </section>
+            <section>
+              {!!list.length && <Cards list={list.slice(0, -1)}/>}
+            </section>
 
+          </div>
         </div>}
       </div>
-    </div>
   );
 };
 
